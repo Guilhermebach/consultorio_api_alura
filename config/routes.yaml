@@ -1,0 +1,62 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+#ola_mundo:
+#    path:     /ola
+#    controller: App\Controller\OlaMundoController::OlaMundo
+
+#ola_show:
+#    path:     /show/{id}
+#    controller: App\Controller\OlaMundoController::OlaShow
+
+# Routes API consultorio Alura
+post_medicos:
+    path:     /medicos
+    controller: App\Controller\MedicoController::insert
+    methods:    POST
+
+get_medicos:
+    path:     /medicos
+    controller: App\Controller\MedicoController::index
+    methods:    GET
+
+get_medicos_id:
+    path:     /medicos/{id}
+    controller: App\Controller\MedicoController::show
+    methods:    GET
+
+put_medicos_id:
+    path:     /medicos/{id}
+    controller: App\Controller\MedicoController::update
+    methods:    PUT
+
+delete_medicos_id:
+    path:     /medicos/{id}
+    controller: App\Controller\MedicoController::delete
+    methods:    DELETE
+
+post_especialidade:
+    path:     /especialidade
+    controller: App\Controller\EspecialidadeController::insert
+    methods:    POST
+
+get_especialidade:
+    path:     /especialidade
+    controller: App\Controller\EspecialidadeController::index
+    methods:    GET
+
+get_especialidade_id:
+    path:     /especialidade/{id}
+    controller: App\Controller\EspecialidadeController::show
+    methods:    GET
+
+put_especialidade_id:
+    path:     /especialidade/{id}
+    controller: App\Controller\EspecialidadeController::update
+    methods:    PUT
+
+delete_especialidade_id:
+    path:     /especialidade/{id}
+    controller: App\Controller\EspecialidadeController::delete
+    methods:    DELETE
