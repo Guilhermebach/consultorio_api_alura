@@ -11,9 +11,9 @@ services:
       - "9000:9000"
     volumes:
       - "./:/var/www/html/"
-      - "./dockerfiles/config/.env:/var/www/html/.env"
-      # - ./dockerfiles/config/php.ini:/usr/local/etc/php/php.ini
-    command: php -S 0.0.0.0:9000 -t public   
+    command: php -S 0.0.0.0:9000 -t public
+    environment:
+      DATABASE_URL: ${DATABASE_URL_PHP}
   db:
     image: mysql:8
     container_name: mysql
@@ -21,8 +21,8 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: consultorio
-      MYSQL_DATABASE: consultorio_alura
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./mysql_data:/var/lib/mysql
 volumes:
