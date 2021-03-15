@@ -1,3 +1,7 @@
+# Author: Guilherme Bach
+# 2020-03-14
+# v1.0
+
 version: '3.1'
 services:
   php:
