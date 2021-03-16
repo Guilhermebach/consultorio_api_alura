@@ -51,6 +51,11 @@ get_especialidade_id:
     controller: App\Controller\EspecialidadeController::show
     methods:    GET
 
+get_especialidade_id_medicos:
+    path:     /especialidade/{especialidadeId}/medicos
+    controller: App\Controller\MedicoController::showByEspecialidade
+    methods:    GET
+
 put_especialidade_id:
     path:     /especialidade/{id}
     controller: App\Controller\EspecialidadeController::update

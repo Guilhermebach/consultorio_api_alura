@@ -3,9 +3,10 @@
 namespace App\Factory;
 
 use App\Entity\Medico;
+use App\Interface\FactoryInterface;
 use App\Repository\EspecialidadeRepository;
 
-class MedicoFactory
+class MedicoFactory implements FactoryInterface
 {
     private $especialidadeRepository;
 

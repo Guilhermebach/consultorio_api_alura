@@ -3,8 +3,9 @@
 namespace App\Factory;
 
 use App\Entity\Especialidade;
+use App\Interface\FactoryInterface;
 
-class EspecialidadeFactory
+class EspecialidadeFactory implements FactoryInterface
 {
     public function factory(string $json): Especialidade
     {

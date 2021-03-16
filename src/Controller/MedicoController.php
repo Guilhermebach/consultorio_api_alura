@@ -2,52 +2,46 @@
 
 namespace App\Controller;
 
+use App\Entity\Medico;
 use App\Factory\MedicoFactory;
+use App\Helper\ExtractorDataRequest;
 use App\Repository\MedicoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MedicoController extends AbstractController
+class MedicoController extends BaseController
 {
-    private $entityManager;
-    private $medicoRepository;
-    private $medicoFactory;
-
     public function __construct(
         EntityManagerInterface $entityManager, 
         MedicoRepository $medicoRepository,
-        MedicoFactory $medicoFactory
+        MedicoFactory $medicoFactory,
+        ExtractorDataRequest $extractorDataRequest
     )
     {
-        $this->entityManager    = $entityManager;
-        $this->medicoRepository = $medicoRepository;
-        $this->medicoFactory    = $medicoFactory;
+        parent::__construct($medicoRepository, $entityManager, $medicoFactory, $extractorDataRequest);
     }
 
-    public function index(): Response
+    /**
+     * @param Medico $entityRequest
+     * @param Medico $entityFound
+     */
+
+    public function updateEntity($entityRequest, $entityFound)
+    {
+        $entityFound->setCrm($entityRequest->getCrm())
+                    ->setNome($entityRequest->getNome())
+                    ->setCodRh($entityRequest->getCodRh())
+                    ->setEspecialidade($entityRequest->getEspecialidade());
+    }
+
+    public function showByEspecialidade(int $especialidadeId): Response
     {
         try {
 
-            $dataMedico = $this->medicoRepository->findAll();
-
-            return new JsonResponse($dataMedico, 200);
-
-        } catch (\Throwable $th) {
-
-            throw $th;
-        }
-        
-    }
-
-    public function show(int $id): Response
-    {
-        try {
-
-            $dataMedico = $this->medicoRepository->find($id);
+            $dataMedico = $this->repository->findBy([
+                'especialidade' => $especialidadeId
+            ]);
 
             return new JsonResponse($dataMedico, 200);
 
@@ -55,66 +49,5 @@ class MedicoController extends AbstractController
             return new JsonResponse($th, Response::HTTP_NO_CONTENT);
         }
         
-    }
-
-    public function insert(Request $r): Response 
-    {
-        try {
-
-            $dataReq = $r->getContent();
-            
-            $medico = $this->medicoFactory->factory($dataReq);
-
-            $this->entityManager->persist($medico);
-            $this->entityManager->flush();
-
-            return new JsonResponse($medico, 201);
-
-        } catch (\Throwable $th) {
-            throw $th;
-        }
-
-    }
-
-    public function update(int $id, Request $r): Response 
-    {
-        try {
-
-            $dataReq = $r->getContent();
-
-            $medicoEnviado = $this->medicoFactory->factory($dataReq);
-
-            $medicoExistente = $this->medicoRepository->find($id);
-
-            $medicoExistente->setCrm($medicoEnviado->getCrm())
-                            ->setNome($medicoEnviado->getNome())
-                            ->setCodRh($medicoEnviado->getCodRh())
-                            ->setEspecialidade($medicoEnviado->getEspecialidade());;
-
-            $this->entityManager->flush();
-
-            return new JsonResponse($medicoExistente, 200);
-
-        } catch (Exception $e) {
-            return new JsonResponse($e, Response::HTTP_NOT_FOUND);
-        }
-
-    }
-
-    public function delete(int $id): Response 
-    {
-        try {
-
-            $medicoExistente = $this->medicoRepository->find($id);
-
-            $this->entityManager->remove($medicoExistente);
-            $this->entityManager->flush();
-
-            return new JsonResponse(null, 200);
-
-        } catch (Exception $e) {
-            return new JsonResponse($e, Response::HTTP_NOT_FOUND);
-        }
-
     }
 }
