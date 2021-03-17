@@ -44,6 +44,16 @@ class Especialidade implements \JsonSerializable
         return [
             'id'    =>  $this->getId(),
             'descricao'   => $this->getDescricao(),
+            '_links' => [
+                [
+                    'rel' => 'self',
+                    'path' => '/especialidade/' . $this->getId()
+                ],
+                [
+                    'rel' => 'especialidade',
+                    'path' => '/especialidade/' . $this->getId() . '/medicos'
+                ]
+            ]
         ];
     }
 }
