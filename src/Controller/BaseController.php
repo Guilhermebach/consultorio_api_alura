@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Factory\ResponseFactory;
 use App\Helper\ExtractorDataRequest;
 use App\Interface\FactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,7 +45,9 @@ abstract class BaseController extends AbstractController
 
             $dataEntity = $this->repository->findBy($filter, $orderBy, $numItens, ($page - 1) * $numItens);
 
-            return new JsonResponse($dataEntity, Response::HTTP_OK);
+            $dataResponse = new ResponseFactory(true, $dataEntity, $page, $numItens);
+
+            return $dataResponse->response();
 
         } catch (\Throwable $th) {
 
@@ -56,7 +59,9 @@ abstract class BaseController extends AbstractController
     {
         try {
 
-            return new JsonResponse($this->repository->find($id), Response::HTTP_OK);
+            $dataResponse = new ResponseFactory(true, $this->repository->find($id));
+
+            return $dataResponse->response();
 
         } catch (\Throwable $th) {
             return new JsonResponse($th, Response::HTTP_NO_CONTENT);
@@ -75,7 +80,9 @@ abstract class BaseController extends AbstractController
             $this->entityManager->persist($new);
             $this->entityManager->flush();
 
-            return new JsonResponse($new, Response::HTTP_CREATED);
+            $dataResponse = new ResponseFactory(true, $new);
+
+            return $dataResponse->response(Response::HTTP_CREATED);
 
         } catch (\Throwable $th) {
             throw $th;
@@ -97,10 +104,14 @@ abstract class BaseController extends AbstractController
 
             $this->entityManager->flush();
 
-            return new JsonResponse($entityFound, Response::HTTP_OK);
+            $dataResponse = new ResponseFactory(true, $entityFound);
+
+            return $dataResponse->response();
 
         } catch (Exception $e) {
-            return new JsonResponse($e, Response::HTTP_NOT_FOUND);
+            $dataResponseError = new ResponseFactory(false, $e);
+
+            return $dataResponseError->response(Response::HTTP_NOT_FOUND);
         }
 
     }
@@ -114,10 +125,14 @@ abstract class BaseController extends AbstractController
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
 
-            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+            $dataResponse = new ResponseFactory(true, $entity);
+
+            return $dataResponse->response(Response::HTTP_NO_CONTENT);
 
         } catch (Exception $e) {
-            return new JsonResponse($e, Response::HTTP_NOT_FOUND);
+            $dataResponseError = new ResponseFactory(false, $e);
+
+            return $dataResponseError->response(Response::HTTP_NOT_FOUND);
         }
 
     }

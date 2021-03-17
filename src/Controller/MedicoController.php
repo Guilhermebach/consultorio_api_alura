@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Medico;
 use App\Factory\MedicoFactory;
+use App\Factory\ResponseFactory;
 use App\Helper\ExtractorDataRequest;
 use App\Repository\MedicoRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,10 +44,14 @@ class MedicoController extends BaseController
                 'especialidade' => $especialidadeId
             ]);
 
-            return new JsonResponse($dataMedico, 200);
+            $dataResponse = new ResponseFactory(true, $dataMedico);
+
+            return $dataResponse->response();
 
         } catch (\Throwable $th) {
-            return new JsonResponse($th, Response::HTTP_NO_CONTENT);
+            $dataResponseError = new ResponseFactory(false, $th);
+
+            return $dataResponseError->response(Response::HTTP_NO_CONTENT);
         }
         
     }
