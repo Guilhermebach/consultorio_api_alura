@@ -11,6 +11,12 @@
 #    controller: App\Controller\OlaMundoController::OlaShow
 
 # Routes API consultorio Alura
+
+login:
+    path:     /login
+    controller: App\Controller\LoginController::index
+    methods:    POST
+
 post_medicos:
     path:     /medicos
     controller: App\Controller\MedicoController::insert
